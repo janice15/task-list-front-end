@@ -5,7 +5,8 @@ import './Task.css';
 
 const Task = (props) => {
   const [complete, setComplete] = useState(props.isComplete);
-  const buttonClass = complete ? 'tasks__item__toggle--completed' : '';
+  const buttonClass  = complete ? 'tasks__item__toggle--completed green': 'red';
+  console.log(`${buttonClass}`)
 
   return (
     <li className="tasks__item">
