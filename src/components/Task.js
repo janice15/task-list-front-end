@@ -6,17 +6,28 @@ import './Task.css';
 const Task = (props) => {
   const [complete, setComplete] = useState(props.isComplete);
   const buttonClass  = complete ? 'tasks__item__toggle--completed green': 'red';
-  console.log(`${buttonClass}`)
+  
+  const toggleComplete = () => {
+    setComplete(!complete);
+    props.updateComplete(props.id);
+  };
+
+  const toggleDelete = () => {
+    props.updateDeleteTask(props.id);
+  };
+
 
   return (
     <li className="tasks__item">
       <button
         className={`tasks__item__toggle ${buttonClass}`}
-        onClick={() => setComplete(!complete)}
+        onClick={toggleComplete}
       >
         {props.title}
       </button>
-      <button className="tasks__item__remove button">x</button>
+      <button 
+        className="tasks__item__remove button" 
+        onClick={toggleDelete}>x</button>
     </li>
   );
 };
@@ -25,6 +36,8 @@ Task.propTypes = {
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   isComplete: PropTypes.bool.isRequired,
+  updateComplete: PropTypes.func,
+  updateDeleteTask: PropTypes.func
 };
 
 export default Task;
