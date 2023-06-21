@@ -3,62 +3,76 @@ import TaskList from './components/TaskList.js';
 import './App.css';
 import axios from 'axios';
 
-const TASKS = [
-  {
-    id: 1,
-    title: 'Mow the lawn',
-    isComplete: false,
-  },
-  {
-    id: 2,
-    title: 'Cook Pasta',
-    isComplete: true,
-  },
-];
-
 const App = () => {
 
-
-
-  const [tasks, setTasks] = useState(TASKS);
-
-  // Update is complete for each task: IsComplete
-  const updateComplete = (taskId) => {
-
-    const updatedTasks = tasks.map(task => {
-      if (task.id === taskId) {
-        task.isComplete = !task.isComplete;
-        return { ...task };
-      } else {
-        return { ...task };
-      }
-    });
-
-    setTasks(updatedTasks);
-  };
-
-  const updateDeleteTask = (taskId) => {
-    const updatedTasks = tasks.filter(task => {
-      return task.id !== taskId;
-    });
-
-    setTasks(updatedTasks);
-  };
-
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5000/tasks')
+    axios.get('https://task-list-api-c17.onrender.com/tasks')
       .then((response) => {
-        setTasks(response.data);
+        const initialTasks = [];
+        response.data.forEach(task => {
+          initialTasks.push(task);
+        });
+        setTasks(initialTasks);
+        console.log('Success call', response.data);
       })
       .catch((error) => {
         console.log('error', error);
-      })
-
+      });
   }, []);
+  
 
+  // Update is complete for each task: IsComplete
+  const markComplete = (taskId) => {
+    
+    axios.patch(`https://task-list-api-c17.onrender.com/tasks/${taskId}/mark_complete`)
+    .then((response) => {
+      console.log('success!', response.data);
+    })
+    .catch( (error) => {
+      console.log('error', error);
+    });
 
-return (
+  };
+      /*
+      const updatedTasks = tasks.map(task => {
+        if (task.id === taskId) {
+          task.isComplete = !task.isComplete;
+          return { ...task };
+        } else {
+          return { ...task };
+        }
+      });
+
+    setTasks(updatedTasks);
+    });
+  };
+
+  */
+
+  const updateDeleteTask = (taskId) => {
+    axios.delete(`https://task-list-api-c17.onrender.com/tasks/${taskId}`)
+    .then((response) => {
+      const updatedTasks = tasks.map((task) => {
+        if (task.id !== taskId) {
+          return { ...task};
+        }
+      });
+
+      const filteredUpdatedData =  updatedTasks.filter(function (element) {
+        return element !== undefined;
+      });
+      console.log('success', response.data);
+      setTasks(filteredUpdatedData);
+    })
+  
+    .catch((error) => {
+      console.log('could not delete task', error, error.response);
+    });
+  };
+
+  return (
   <div className="App">
     <header className="App-header">
       <h1>Ada&apos;s Task List</h1>
@@ -66,7 +80,8 @@ return (
     <main>
       <div>{<TaskList
         tasks={tasks}
-        updateComplete={updateComplete}
+        //updateComplete={updateComplete}
+        markComplete={markComplete}
         updateDeleteTask={updateDeleteTask}
       />}</div>
     </main>
