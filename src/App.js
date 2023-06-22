@@ -25,7 +25,6 @@ const App = () => {
 
   // Update is complete for each task: IsComplete
   const markComplete = (taskId) => {
-    
     axios.patch(`https://task-list-api-c17.onrender.com/tasks/${taskId}/mark_complete`)
     .then((response) => {
       console.log('success!', response.data);
@@ -63,10 +62,10 @@ const App = () => {
       const filteredUpdatedData =  updatedTasks.filter(function (element) {
         return element !== undefined;
       });
-      console.log('success', response.data);
+
+      console.log('success!', response.data);
       setTasks(filteredUpdatedData);
     })
-  
     .catch((error) => {
       console.log('could not delete task', error, error.response);
     });

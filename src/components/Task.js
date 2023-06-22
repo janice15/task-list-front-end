@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
 import './Task.css';
 
 const Task = (props) => {
@@ -9,7 +8,7 @@ const Task = (props) => {
   
   const toggleComplete = () => {
     setComplete(!complete);
-    props.updateComplete(props.id);
+    props.markComplete(props.id);
   };
 
   const toggleDelete = () => {
@@ -36,8 +35,9 @@ Task.propTypes = {
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   isComplete: PropTypes.bool.isRequired,
-  updateComplete: PropTypes.func,
-  updateDeleteTask: PropTypes.func
+  // updateComplete: PropTypes.func,
+  updateDeleteTask: PropTypes.func,
+  markComplete: PropTypes.func
 };
 
 export default Task;
