@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TaskList from './components/TaskList.js';
 import './App.css';
 import axios from 'axios';
+import NewTaskForm from './components/NewTaskForm.js';
 
 const App = () => {
 
@@ -71,21 +72,45 @@ const App = () => {
     });
   };
 
+  const createNewTask = (newTaskInfo) => {
+    const updateNewTaskInfo = {
+      ...newTaskInfo, 
+      'description':null,
+      'isComplete': false,
+      
+    };
+    axios
+      .post('https://task-list-api-c17.onrender.com/tasks', updateNewTaskInfo)
+      .then(() => {
+        const newTaskArray = [...tasks];
+        newTaskArray.push(newTaskInfo);
+        setTasks(newTaskArray);
+      }) 
+
+      .catch((error) => {
+        console.log(error);
+      });
+
+    };
+
+  
+
   return (
-  <div className="App">
-    <header className="App-header">
-      <h1>Ada&apos;s Task List</h1>
-    </header>
-    <main>
-      <div>{<TaskList
-        tasks={tasks}
-        //updateComplete={updateComplete}
-        markComplete={markComplete}
-        updateDeleteTask={updateDeleteTask}
-      />}</div>
-    </main>
-  </div>
-);
+    <div className="App">
+      <header className="App-header">
+        <h1>Ada&apos;s Task List</h1>
+      </header>
+      <main>
+        <NewTaskForm createNewTask={createNewTask}/>
+        <div>{<TaskList
+          tasks={tasks}
+          //updateComplete={updateComplete}
+          markComplete={markComplete}
+          updateDeleteTask={updateDeleteTask}
+        />}</div>
+      </main>
+    </div>
+  );
 };
 
 export default App;
